@@ -1,0 +1,22 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mantenweb-backend-prod
+    environment:
+      SERVER_PORT: 8080
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      APP_FRONTEND_RESET_URL: http://localhost:5173/reset-password?token=%s
+      APP_MAIL_FROM: no-reply@mantenweb.local
+      APP_JWT_SECRET: ${APP_JWT_SECRET}
+      APP_JWT_EXPIRATION: ${APP_JWT_EXPIRATION:-86400000}
+      MANAGEMENT_HEALTH_MAIL_ENABLED: "false"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped

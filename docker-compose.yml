@@ -1,0 +1,47 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: mantenweb-mysql
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-mantenweb}
+      MYSQL_USER: ${MYSQL_USER:-mantenweb}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-mantenweb123}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-admin123}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mantenweb-backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: 8080
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:mysql://mysql:3306/mantenweb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-mantenweb}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-mantenweb123}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      APP_FRONTEND_RESET_URL: http://localhost:5173/reset-password?token=%s
+      APP_MAIL_FROM: no-reply@mantenweb.local
+      APP_JWT_SECRET: bWlfY2xhdmVfc2VjcmV0YV9wYXJhX2Rlc2Fycm9sbG9fMTIzNDU2Nzg5MDEyMzQ1Njc4OTA=
+      APP_JWT_EXPIRATION: 86400000
+      MANAGEMENT_HEALTH_MAIL_ENABLED: "false"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
