@@ -15,6 +15,10 @@ public class Ubicacion {
     @JoinColumn(name = "id_area", nullable = false)
     private Area area;
 
+    @ManyToOne
+    @JoinColumn(name = "id_usuario_encargado")
+    private Usuario usuarioEncargado;
+
     @Column(name = "nombre_ubicacion", nullable = false, length = 80)
     private String nombreUbicacion;
 
@@ -23,6 +27,9 @@ public class Ubicacion {
 
     public Area getArea() { return area; }
     public void setArea(Area area) { this.area = area; }
+
+    public Usuario getUsuarioEncargado() { return usuarioEncargado; }
+    public void setUsuarioEncargado(Usuario usuarioEncargado) { this.usuarioEncargado = usuarioEncargado; }
 
     public String getNombreUbicacion() { return nombreUbicacion; }
     public void setNombreUbicacion(String nombreUbicacion) { this.nombreUbicacion = nombreUbicacion; }

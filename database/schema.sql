@@ -14,9 +14,16 @@ CREATE TABLE IF NOT EXISTS roles (
   PRIMARY KEY (id_rol)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS especialidades (
+  id_especialidad BIGINT NOT NULL AUTO_INCREMENT,
+  nombre_especialidad VARCHAR(60) NOT NULL,
+  PRIMARY KEY (id_especialidad)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS usuarios (
   id_usuario BIGINT NOT NULL AUTO_INCREMENT,
   id_rol BIGINT NOT NULL,
+  id_especialidad BIGINT NULL,
   nombre_completo VARCHAR(120) NOT NULL,
   correo VARCHAR(120) NOT NULL,
   hash_contrasena VARCHAR(255) NOT NULL,
@@ -24,8 +31,11 @@ CREATE TABLE IF NOT EXISTS usuarios (
   fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id_usuario),
   KEY idx_usuarios_rol (id_rol),
+  KEY idx_usuarios_especialidad (id_especialidad),
   CONSTRAINT fk_usuarios_roles
-    FOREIGN KEY (id_rol) REFERENCES roles (id_rol)
+    FOREIGN KEY (id_rol) REFERENCES roles (id_rol),
+  CONSTRAINT fk_usuarios_especialidades
+    FOREIGN KEY (id_especialidad) REFERENCES especialidades (id_especialidad)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS areas (
@@ -37,17 +47,15 @@ CREATE TABLE IF NOT EXISTS areas (
 CREATE TABLE IF NOT EXISTS ubicaciones (
   id_ubicacion BIGINT NOT NULL AUTO_INCREMENT,
   id_area BIGINT NOT NULL,
+  id_usuario_encargado BIGINT NULL,
   nombre_ubicacion VARCHAR(80) NOT NULL,
   PRIMARY KEY (id_ubicacion),
   KEY idx_ubicaciones_area (id_area),
+  KEY idx_ubicaciones_usuario_encargado (id_usuario_encargado),
   CONSTRAINT fk_ubicaciones_areas
-    FOREIGN KEY (id_area) REFERENCES areas (id_area)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS especialidades (
-  id_especialidad BIGINT NOT NULL AUTO_INCREMENT,
-  nombre_especialidad VARCHAR(60) NOT NULL,
-  PRIMARY KEY (id_especialidad)
+    FOREIGN KEY (id_area) REFERENCES areas (id_area),
+  CONSTRAINT fk_ubicaciones_usuario_encargado
+    FOREIGN KEY (id_usuario_encargado) REFERENCES usuarios (id_usuario)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS prioridades (
@@ -116,4 +124,26 @@ CREATE TABLE IF NOT EXISTS password_reset_tokens (
   KEY idx_password_reset_usuario (id_usuario),
   CONSTRAINT fk_password_reset_usuarios
     FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS historial_ot (
+  id_historial BIGINT NOT NULL AUTO_INCREMENT,
+  id_ot BIGINT NOT NULL,
+  id_usuario BIGINT NOT NULL,
+  campo_modificado VARCHAR(60) NOT NULL,
+  valor_anterior TEXT NULL,
+  valor_nuevo TEXT NULL,
+  comentario TEXT NULL,
+  fecha_cambio DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id_historial),
+  KEY idx_historial_ot_ot (id_ot),
+  KEY idx_historial_ot_usuario (id_usuario),
+  CONSTRAINT fk_historial_ot_ordenes_trabajo
+    FOREIGN KEY (id_ot) REFERENCES ordenes_trabajo (id_ot)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT fk_historial_ot_usuarios
+    FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

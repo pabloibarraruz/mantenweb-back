@@ -1,6 +1,8 @@
-# Docker Backend
+# Uso con Docker
 
-## Levantar backend + MySQL en desarrollo
+Este archivo resume como levantar el backend de MantenWeb usando Docker. No es obligatorio para ejecutar el proyecto, pero sirve si se quiere probar el backend junto con MySQL local.
+
+## Backend + MySQL local
 
 Desde la carpeta `mantenweb-back`:
 
@@ -8,19 +10,19 @@ Desde la carpeta `mantenweb-back`:
 docker compose --env-file .env.local up --build
 ```
 
-Esto levantará:
+Esto levanta:
 
 - `mysql` en `localhost:3306`
 - `backend` en `localhost:8080`
 
-El `docker-compose.yml` queda orientado a desarrollo local y usa por defecto:
+El archivo `docker-compose.yml` esta pensado para desarrollo local y usa:
 
 - perfil Spring `dev`
 - MySQL local `mantenweb`
 - usuario `mantenweb`
 - password definido en `.env.local`
 
-## Levantar backend apuntando a producción
+## Backend apuntando a produccion
 
 Desde la carpeta `mantenweb-back`:
 
@@ -34,9 +36,9 @@ Este compose usa:
 - MySQL de Railway definido en `.env.prod`
 - JWT definido en `.env.prod`
 
-## Variables importantes
+## Variables de entorno
 
-El backend quedó preparado para leer configuración por variables de entorno:
+El backend lee la configuracion desde variables de entorno:
 
 - `SPRING_PROFILES_ACTIVE`
 - `SERVER_PORT`
@@ -50,7 +52,7 @@ El backend quedó preparado para leer configuración por variables de entorno:
 - `APP_FRONTEND_RESET_URL`
 - `APP_MAIL_FROM`
 
-## Ambientes
+## Ambientes usados
 
 Para desarrollo local usa `.env.local`.
 
@@ -61,9 +63,9 @@ VS Code quedó con dos configuraciones:
 - `Spring Boot Local`
 - `Spring Boot Prod`
 
-## Railway MySQL
+## Formato de conexion MySQL
 
-Para esta app Spring Boot no se usa el valor `mysql://...` tal cual, porque Spring espera `jdbc:mysql://...`.
+Spring Boot espera la URL con formato `jdbc:mysql://...`.
 
 Ejemplo de formato para variables:
 
@@ -77,7 +79,7 @@ export APP_JWT_EXPIRATION="86400000"
 
 Los valores reales deben quedar solamente en variables de entorno o archivos `.env` locales no versionados.
 
-## Render
+## Variables usadas en Render
 
 En Render deja estas variables de entorno:
 
