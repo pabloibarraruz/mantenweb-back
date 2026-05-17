@@ -32,7 +32,7 @@ public class Usuario {
     @Column(name = "activo", nullable = false)
     private Boolean activo;
 
-    // La fecha la pone la base de datos.
+    // La fecha se define desde la base de datos.
     @Column(name = "fecha_creacion", insertable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 

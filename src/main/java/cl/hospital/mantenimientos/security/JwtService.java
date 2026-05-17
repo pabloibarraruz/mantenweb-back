@@ -90,7 +90,7 @@ public class JwtService {
                     return decoded;
                 }
             } catch (RuntimeException ignored) {
-                // Si no calza, se prueba el otro formato.
+                // Si no corresponde, se prueba el otro formato.
             }
         }
 

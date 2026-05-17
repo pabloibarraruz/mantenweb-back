@@ -149,7 +149,7 @@ public class OrdenTrabajoService {
         OrdenTrabajo ot = obtenerEntidadPorId(idOt);
 
         if (ot.getFechaCierre() != null) {
-            return ot; // ya estaba cerrada
+            return ot; // La OT ya se encontraba cerrada.
         }
 
         LocalDateTime now = LocalDateTime.now(appClock);

@@ -32,7 +32,7 @@ public class OrdenTrabajoController {
         return ordenTrabajoService.listar();
     }
 
-    // Ordenes asignadas al tecnico logueado.
+    // Ordenes asignadas al tecnico autenticado.
     @GetMapping("/mis-asignadas")
     public List<OrdenTrabajoResponseDto> listarMisAsignadas(@AuthenticationPrincipal UserDetails userDetails) {
         requireRole(userDetails, "TECNICO");

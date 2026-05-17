@@ -32,7 +32,7 @@ public class OpenApiConfig {
                                 .scheme("bearer")
                                 .bearerFormat("JWT")
                                 .in(SecurityScheme.In.HEADER)
-                                .description("Pega aqui el JWT obtenido desde /api/auth/login.")))
+                                .description("Ingrese el JWT obtenido desde /api/auth/login.")))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
 
         if (serverUrl != null && !serverUrl.isBlank()) {

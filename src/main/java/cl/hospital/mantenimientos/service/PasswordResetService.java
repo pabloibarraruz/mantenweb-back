@@ -60,7 +60,7 @@ public class PasswordResetService {
             emailService.enviar(usuario.getCorreo(), subject, body);
         });
 
-        // Si el correo no existe, se responde igual para no mostrar si esta registrado.
+        // Si el correo no existe, se mantiene la misma respuesta para no revelar cuentas registradas.
     }
 
     public void resetPassword(String token, String nuevaContrasena) {
